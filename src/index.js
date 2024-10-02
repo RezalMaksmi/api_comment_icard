@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql2");
 const path = require("path");
+require("dotenv").config();
 
 const app = express();
 
@@ -15,16 +16,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Inisialisasi database MySQL
 const db = mysql.createConnection({
-  host: "127.0.0.1", // Laragon's MySQL default host
-  user: "root", // Default user in Laragon
-  password: "", // Default password (empty in Laragon)
-  database: "komentar_db", // Name of the database you created
+  host: process.env.DB_HOST, // Laragon's MySQL default host
+  user: process.env.DB_USERNAME, // Default user in Laragon
+  password: process.env.DB_PASSWORD, // Default password (empty in Laragon)
+  database: process.env.DB_NAME, // Name of the database you created
+  port: process.env.DB_PORT,
 });
 
 // Connect to the database
-db.connect((err) => {
+db.connect(async (err) => {
   if (err) {
-    console.error("Database connection failed:", err.stack);
+    await console.error("Database connection failed:", err.stack);
     return;
   }
   console.log("Connected to the MySQL database.");
